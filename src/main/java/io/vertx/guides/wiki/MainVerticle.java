@@ -20,30 +20,30 @@ package io.vertx.guides.wiki;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.DeploymentOptions;
 import io.vertx.core.Future;
+import io.vertx.guides.wiki.database.WikiDatabaseVerticle;
 
 /**
  * @author <a href="https://julien.ponge.org/">Julien Ponge</a>
  */
-// tag::main[]
 public class MainVerticle extends AbstractVerticle {
 
   @Override
   public void start(Future<Void> startFuture) throws Exception {
 
-    Future<String> dbVerticleDeployment = Future.future();  // <1>
-    vertx.deployVerticle(new WikiDatabaseVerticle(), dbVerticleDeployment.completer());  // <2>
+    Future<String> dbVerticleDeployment = Future.future();
+    vertx.deployVerticle(new WikiDatabaseVerticle(), dbVerticleDeployment.completer());
 
-    dbVerticleDeployment.compose(id -> {  // <3>
+    dbVerticleDeployment.compose(id -> {
 
       Future<String> httpVerticleDeployment = Future.future();
       vertx.deployVerticle(
-        "io.vertx.guides.wiki.HttpServerVerticle",  // <4>
-        new DeploymentOptions().setInstances(2),    // <5>
+        "io.vertx.guides.wiki.http.HttpServerVerticle",
+        new DeploymentOptions().setInstances(2),
         httpVerticleDeployment.completer());
 
-      return httpVerticleDeployment;  // <6>
+      return httpVerticleDeployment;
 
-    }).setHandler(ar -> {   // <7>
+    }).setHandler(ar -> {
       if (ar.succeeded()) {
         startFuture.complete();
       } else {
@@ -52,4 +52,3 @@ public class MainVerticle extends AbstractVerticle {
     });
   }
 }
-// end::main[]
