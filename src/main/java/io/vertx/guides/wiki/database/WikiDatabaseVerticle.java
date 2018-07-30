@@ -32,7 +32,6 @@ import java.util.Properties;
 /**
  * @author <a href="https://julien.ponge.org/">Julien Ponge</a>
  */
-// tag::dbverticle[]
 public class WikiDatabaseVerticle extends AbstractVerticle {
 
   public static final String CONFIG_WIKIDB_JDBC_URL = "wikidb.jdbc.url";
@@ -54,9 +53,7 @@ public class WikiDatabaseVerticle extends AbstractVerticle {
     WikiDatabaseService.create(dbClient, sqlQueries, ready -> {
       if (ready.succeeded()) {
         ServiceBinder binder = new ServiceBinder(vertx);
-        binder
-          .setAddress(CONFIG_WIKIDB_QUEUE)
-          .register(WikiDatabaseService.class, ready.result()); // <1>
+        binder.setAddress(CONFIG_WIKIDB_QUEUE).register(WikiDatabaseService.class, ready.result());
         startFuture.complete();
       } else {
         startFuture.fail(ready.cause());
@@ -91,4 +88,3 @@ public class WikiDatabaseVerticle extends AbstractVerticle {
     return sqlQueries;
   }
 }
-// end::dbverticle[]

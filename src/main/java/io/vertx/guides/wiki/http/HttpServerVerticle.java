@@ -46,23 +46,20 @@ public class HttpServerVerticle extends AbstractVerticle {
 
   private final FreeMarkerTemplateEngine templateEngine = FreeMarkerTemplateEngine.create();
 
+  private WikiDatabaseService dbService;
+
   private static final String EMPTY_PAGE_MARKDOWN =
     "# A new page\n" +
       "\n" +
       "Feel-free to write in Markdown!\n";
 
-  // tag::db-consume[]
-  private WikiDatabaseService dbService;
-
   @Override
   public void start(Future<Void> startFuture) throws Exception {
 
-    String wikiDbQueue = config().getString(CONFIG_WIKIDB_QUEUE, "wikidb.queue"); // <1>
+    String wikiDbQueue = config().getString(CONFIG_WIKIDB_QUEUE, "wikidb.queue");
     dbService = WikiDatabaseService.createProxy(vertx, wikiDbQueue);
 
     HttpServer server = vertx.createHttpServer();
-    // (...)
-  // end::db-consume[]
 
     Router router = Router.router(vertx);
     router.get("/").handler(this::indexHandler);
@@ -86,7 +83,7 @@ public class HttpServerVerticle extends AbstractVerticle {
       });
   }
 
-  // tag::db-service-calls[]
+
   private void indexHandler(RoutingContext context) {
     dbService.fetchAllPages(reply -> {
       if (reply.succeeded()) {
@@ -179,5 +176,4 @@ public class HttpServerVerticle extends AbstractVerticle {
       }
     });
   }
-  // end::db-service-calls[]
 }
