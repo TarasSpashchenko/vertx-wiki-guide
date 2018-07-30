@@ -50,6 +50,9 @@ public interface WikiDatabaseService {
   WikiDatabaseService fetchPage(String name, Handler<AsyncResult<JsonObject>> resultHandler);
 
   @Fluent
+  WikiDatabaseService fetchPageById(int id, Handler<AsyncResult<JsonObject>> resultHandler);
+
+  @Fluent
   WikiDatabaseService createPage(String title, String markdown, Handler<AsyncResult<Void>> resultHandler);
 
   @Fluent
@@ -58,8 +61,6 @@ public interface WikiDatabaseService {
   @Fluent
   WikiDatabaseService deletePage(int id, Handler<AsyncResult<Void>> resultHandler);
 
-  // tag::fetchAllPagesData[]
   @Fluent
   WikiDatabaseService fetchAllPagesData(Handler<AsyncResult<List<JsonObject>>> resultHandler);
-  // end::fetchAllPagesData[]
 }

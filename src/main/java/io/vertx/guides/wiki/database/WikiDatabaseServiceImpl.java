@@ -108,6 +108,29 @@ class WikiDatabaseServiceImpl implements WikiDatabaseService {
   }
 
   @Override
+  public WikiDatabaseService fetchPageById(int id, Handler<AsyncResult<JsonObject>> resultHandler) {
+    dbClient.queryWithParams(sqlQueries.get(SqlQuery.GET_PAGE_BY_ID), new JsonArray().add(id), res -> {
+      if (res.succeeded()) {
+        if (res.result().getNumRows() > 0) {
+          JsonObject result = res.result().getRows().get(0);
+          resultHandler.handle(Future.succeededFuture(new JsonObject()
+            .put("found", true)
+            .put("id", result.getInteger("ID"))
+            .put("name", result.getString("NAME"))
+            .put("content", result.getString("CONTENT"))));
+        } else {
+          resultHandler.handle(Future.succeededFuture(
+            new JsonObject().put("found", false)));
+        }
+      } else {
+        LOGGER.error("Database query error", res.cause());
+        resultHandler.handle(Future.failedFuture(res.cause()));
+      }
+    });
+    return this;
+  }
+
+  @Override
   public WikiDatabaseService createPage(String title, String markdown, Handler<AsyncResult<Void>> resultHandler) {
     JsonArray data = new JsonArray().add(title).add(markdown);
     dbClient.updateWithParams(sqlQueries.get(SqlQuery.CREATE_PAGE), data, res -> {
@@ -149,7 +172,6 @@ class WikiDatabaseServiceImpl implements WikiDatabaseService {
     return this;
   }
 
-  // tag::fetchAllPagesData[]
   @Override
   public WikiDatabaseService fetchAllPagesData(Handler<AsyncResult<List<JsonObject>>> resultHandler) {
     dbClient.query(sqlQueries.get(SqlQuery.ALL_PAGES_DATA), queryResult -> {
@@ -162,5 +184,4 @@ class WikiDatabaseServiceImpl implements WikiDatabaseService {
     });
     return this;
   }
-  // end::fetchAllPagesData[]
 }
