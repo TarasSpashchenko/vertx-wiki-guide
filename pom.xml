@@ -23,7 +23,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>io.vertx</groupId>
-  <artifactId>wiki-step-4</artifactId>
+  <artifactId>wiki-step-5</artifactId>
   <version>1.4.0-SNAPSHOT</version>
 
   <properties>
@@ -93,7 +93,6 @@
       <scope>provided</scope>
     </dependency>
 
-    <!-- tag::test-deps[] -->
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
@@ -105,7 +104,6 @@
       <artifactId>vertx-unit</artifactId>
       <scope>test</scope>
     </dependency>
-    <!-- end::test-deps[] -->
   </dependencies>
 
   <build>
