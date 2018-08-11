@@ -23,7 +23,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>io.vertx</groupId>
-  <artifactId>wiki-step-5</artifactId>
+  <artifactId>wiki-step-7</artifactId>
   <version>1.4.0-SNAPSHOT</version>
 
   <properties>
@@ -86,6 +86,20 @@
       <artifactId>hsqldb</artifactId>
       <version>2.3.4</version>
     </dependency>
+
+    <!--tag::jdbc-auth[] -->
+    <dependency>
+      <groupId>io.vertx</groupId>
+      <artifactId>vertx-auth-jdbc</artifactId>
+    </dependency>
+    <!--end::jdbc-auth[] -->
+
+    <!-- tag::jwt[] -->
+    <dependency>
+      <groupId>io.vertx</groupId>
+      <artifactId>vertx-auth-jwt</artifactId>
+    </dependency>
+    <!-- end::jwt[] -->
 
     <dependency>
       <groupId>io.vertx</groupId>

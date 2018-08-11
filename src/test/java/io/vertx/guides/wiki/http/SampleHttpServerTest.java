@@ -64,7 +64,7 @@ public class SampleHttpServerTest {
             HttpResponse<Buffer> response = ar.result();
             context.assertTrue(response.headers().contains("Content-Type"));
             context.assertEquals("text/plain", response.getHeader("Content-Type"));
-            context.assertEquals("Ok", response.body().toString());
+            context.assertEquals("Ok", response.bodyAsString());
             webClient.close();
             async.complete();
           } else {
