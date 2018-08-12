@@ -22,6 +22,10 @@ import io.vertx.core.DeploymentOptions;
 import io.vertx.core.Future;
 import io.vertx.guides.wiki.database.WikiDatabaseVerticle;
 import io.vertx.guides.wiki.http.AuthInitializerVerticle;
+import io.vertx.guides.wiki.investigation.HttpRoutersComposeFutureInvestigationVerticle;
+import io.vertx.guides.wiki.investigation.HttpRoutersInvestigationVerticle;
+import io.vertx.guides.wiki.investigation.HttpRoutersSimpleComposeInvestigationVerticle;
+import io.vertx.guides.wiki.investigation.service.InvestigationServiceVerticle;
 
 /**
  * @author <a href="https://julien.ponge.org/">Julien Ponge</a>
@@ -46,6 +50,22 @@ public class MainVerticle extends AbstractVerticle {
         new DeploymentOptions().setInstances(2),
         httpVerticleDeployment.completer());
       return httpVerticleDeployment;
+    }).compose(id -> {
+      Future<String> httpRoutersInvestigationVerticleDeployment = Future.future();
+      vertx.deployVerticle(new HttpRoutersInvestigationVerticle(), httpRoutersInvestigationVerticleDeployment);
+      return httpRoutersInvestigationVerticleDeployment;
+    }).compose(id -> {
+      Future<String> investigationServiceVerticleDeployment = Future.future();
+      vertx.deployVerticle(new InvestigationServiceVerticle(), investigationServiceVerticleDeployment);
+      return investigationServiceVerticleDeployment;
+    }).compose(id -> {
+      Future<String> http7777 = Future.future();
+      vertx.deployVerticle(new HttpRoutersSimpleComposeInvestigationVerticle(), http7777);
+      return http7777;
+    }).compose(id -> {
+      Future<String> http8888 = Future.future();
+      vertx.deployVerticle(new HttpRoutersComposeFutureInvestigationVerticle(), http8888);
+      return http8888;
     }).setHandler(ar -> {
       if (ar.succeeded()) {
         startFuture.complete();
